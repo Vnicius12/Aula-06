@@ -2,7 +2,9 @@ package br.com.bossini.pessoal_usjt_ads3anmca_app_helpdesk_viewholder;
 
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HelpDeskContract {
     private HelpDeskContract(){
@@ -11,12 +13,34 @@ public class HelpDeskContract {
     private static List <Fila> filas;
 
     static {
+        filas = new ArrayList<>();
         filas.add(new Fila(1, "Desktop", R.drawable.ic_computer_black_24dp));
-        filas.add((new Fila(2,"Telefonia", R.drawable.ic_phone_in_talk_black_24dp)));
+        filas.add(new Fila(2,"Telefonia", R.drawable.ic_phone_in_talk_black_24dp));
         filas.add (new Fila (3, "Redes",R.drawable.ic_network_check_black_24dp));
         filas.add (new Fila (4, "Servidores",R.drawable.ic_poll_black_24dp));
         filas.add (new Fila (5, "Novos Projetos",R.drawable.ic_new_releases_black_24dp));
     }
+
+        public static String insertFilas(){
+            String template = "INSERT INTO &s (%s, %s, %s)VALUES(%id, '%s', %id);";
+            StringBuilder sb = new StringBuilder("");
+            for (Fila fila : filas){
+                sb.append(
+                        String.format(
+                                Locale.getDefault(),
+                                template,
+                                FilaContract.TABLE_NAME,
+                                FilaContract.COLUMN_NAME_ID,
+                                FilaContract.COLUMN_NAME_NOME,
+                                FilaContract.COLUMN_NAME_ICON_ID,
+                                fila.getId(),
+                                fila.getNome(),
+                                fila.getIconId()
+                        )
+                );
+            }
+            return sb.toString();
+        }
 
     public static class FilaContract implements BaseColumns{
         public static final String TABLE_NAME = "tb_fila";
